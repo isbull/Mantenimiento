@@ -1,0 +1,7 @@
+INSERT INTO usuarios (nombre,email, password, coche, matricula, telefono, direccion) VALUES ('Cachero', 'admin@admin.com', 'admin', 'A6', '1524YLD', '122545892', 'cale administrador');
+
+INSERT INTO coches (matricula, marca, modelo, plazas, kilometros, itv, itv_fecha,ultimo_mantenimiento) VALUES ('1524YLD', 'Audi', 'A6', '5', '120000', '1', '2023-05-05','2023-05-05');
+
+INSERT INTO ficha_tecnica_coches (matricula, marca, modelo, tamaño_ruedas, motor, combustible, bateria, caballaje, tipo_aceite, filtro_aceite, filtro_aire, filtro_gasolina, filtro_aceite_diferencial, filtro_aceite_transmision, filtro_aceite_direccion, bujias, bandas, pastillas_frenos, cigueñales, arbol_levas) VALUES ('1524YLD', 'Audi', 'A6', '15', '1.8', 'gasolina', '12v', '120', 'aceite', 'filtro', 'filtro', 'filtro', 'filtro', 'filtro', 'filtro', 'filtro', 'filtro', 'filtro', 'filtro', 'filtro');
+
+INSERT Into mantenimiento_periodico ( cambio_filtro_aire, cambio_filtro_gasolina, cambio_filtro_aceite_motor, cambio_filtro_aceite_diferencial, cambio_bujias, revision_bandas, cambio_aceite_transmision, cambio_aceite_direccion, cambio_aceite_frenos,revision_ruedas_delanteras,revision_ruedas_traseras,revision_cigueñales) VALUES ('1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1');
