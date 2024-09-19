@@ -1,4 +1,4 @@
-import { getPool } from "./getPool.js";
+import getPool from "./getPool.js";
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
 
@@ -23,8 +23,7 @@ const main = async () => {
     await pool.query("SET FOREIGN_KEY_CHECKS = 1");
     console.log("Creando tablas...");
 
-    await pool.query(`CREATE TABLE IF NOT EXISTS users(
-      id INT(11) NOT NULL AUTO_INCREMENT,
+    await pool.query(`CREATE TABLE IF NOT EXISTS users (
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
     password VARCHAR(100) NOT NULL,
@@ -33,65 +32,62 @@ const main = async () => {
     role ENUM('admin', 'cliente') DEFAULT 'cliente',
     registrationCode CHAR(30),
     recoverPassCode CHAR(10),
-    telefono VARCHAR(20) NOT NULL,
-    
+    telefono VARCHAR(20) NOT NULL,    
     direccion VARCHAR(100) NOT NULL
-    )`);
+)`);
 
-    await pool.query(`CREATE TABLE IF NOT EXISTS coches(
-      id INT NOT NULL AUTO_INCREMENT,
-      matricula VARCHAR(10) NOT NULL UNIQUE,
-      marca VARCHAR(20) NOT NULL,
-      modelo VARCHAR(30) NOT NULL,
-      plazas INT(10),
-      kilometros INT(100) NOT NULL,
-      itv BOOLEAN NOT NULL,
-      itv_fecha DATE NOT NULL,
-      ultimo_mantenimiento DATE NOT NULL,
-      PRIMARY KEY (id),
-      FOREIGN KEY (matricula) REFERENCES users(matricula)
-    )`);
+    await pool.query(`CREATE TABLE IF NOT EXISTS coches (
+    matricula VARCHAR(10) NOT NULL UNIQUE PRIMARY KEY,
+    marca VARCHAR(20) NOT NULL,
+    modelo VARCHAR(30) NOT NULL,
+    plazas INT(10) NOT NULL,
+    kilometros INT(100) NOT NULL,
+    itv TINYINT(1) NOT NULL,
+    itv_fecha DATE NOT NULL,
+    ultimo_mantenimiento DATE NOT NULL,
+    FOREIGN KEY (matricula) REFERENCES users(matricula)
+)`);
 
     await pool.query(`CREATE TABLE IF NOT EXISTS ficha_tecnica_coches (
-      matricula VARCHAR(10) PRIMARY KEY NOT NULL UNIQUE,
-      marca VARCHAR(50) NOT NULL,
-      modelo VARCHAR(50) NOT NULL,
-      tamaño_ruedas VARCHAR(11) NOT NULL,
-      motor VARCHAR(100) NOT NULL,
-      combustible VARCHAR(30) NOT NULL,
-      bateria VARCHAR(100) NOT NULL,
-      caballaje VARCHAR(20) NOT NULL,
-      tipo_aceite VARCHAR(100) NOT NULL,
-      filtro_aceite VARCHAR(100) NOT NULL,
-      filtro_aire VARCHAR(100) NOT NULL,
-      filtro_gasolina VARCHAR(100) NOT NULL,
-      filtro_aceite_diferencial VARCHAR(100) NOT NULL,
-      filtro_aceite_transmision VARCHAR(100) NOT NULL,
-      filtro_aceite_direccion VARCHAR(100) NOT NULL,
-      bujias VARCHAR(100) NOT NULL,
-      bandas VARCHAR(100) NOT NULL,
-      pastillas_frenos VARCHAR(100) NOT NULL,
-      cigueñales VARCHAR(100) NOT NULL,
-      arbol_levas VARCHAR(100) NOT NULL,
-      FOREIGN KEY (matricula) REFERENCES users(matricula)
-    )`);
+    matricula VARCHAR(10) PRIMARY KEY NOT NULL UNIQUE,
+    marca VARCHAR(50) NOT NULL,
+    modelo VARCHAR(50) NOT NULL,
+    tamaño_ruedas VARCHAR(11) NOT NULL,
+    motor VARCHAR(100) NOT NULL,
+    combustible VARCHAR(30) NOT NULL,
+    bateria VARCHAR(100) NOT NULL,
+    caballaje VARCHAR(20) NOT NULL,
+    tipo_aceite VARCHAR(100) NOT NULL,
+    filtro_aceite VARCHAR(100) NOT NULL,
+    filtro_aire VARCHAR(100) NOT NULL,
+    filtro_gasolina VARCHAR(100) NOT NULL,
+    filtro_aceite_diferencial VARCHAR(100) NOT NULL,
+    filtro_aceite_transmision VARCHAR(100) NOT NULL,
+    filtro_aceite_direccion VARCHAR(100) NOT NULL,
+    bujias VARCHAR(100) NOT NULL,
+    bandas VARCHAR(100) NOT NULL,
+    pastillas_frenos VARCHAR(100) NOT NULL,
+    cigueñales VARCHAR(100) NOT NULL,
+    arbol_levas VARCHAR(100) NOT NULL,
+    FOREIGN KEY (matricula) REFERENCES users(matricula)
+)`);
 
     await pool.query(`CREATE TABLE IF NOT EXISTS mantenimiento_periodico (
-      matricula VARCHAR(10) PRIMARY KEY NOT NULL UNIQUE,
-      fecha_cambio_aceite DATE NOT NULL,
-      fecha_cambio_filtro_aire DATE NOT NULL,
-      fecha_cambio_filtro_gasolina DATE NOT NULL,
-      fecha_cambio_filtro_aceite DATE NOT NULL,
-      fecha_cambio_filtro_aceite_diferencial DATE NOT NULL,
-      fecha_cambio_filtro_aceite_transmision DATE NOT NULL,
-      fecha_cambio_filtro_aceite_direccion DATE NOT NULL,
-      fecha_cambio_bujias DATE NOT NULL,
-      fecha_cambio_bandas DATE NOT NULL,
-      fecha_cambio_pastillas_frenos DATE NOT NULL,
-      fecha_cambio_cigueñales DATE NOT NULL,
-      fecha_cambio_arbol_levas DATE NOT NULL,
-      FOREIGN KEY (matricula) REFERENCES users(matricula)
-    )`);
+    matricula VARCHAR(20) NOT NULL,
+    cambio_filtro_aire VARCHAR(100) NOT NULL,
+    cambio_filtro_gasolina VARCHAR(100) NOT NULL,
+    cambio_filtro_aceite_motor VARCHAR(100) NOT NULL,
+    cambio_filtro_aceite_diferencial VARCHAR(100) NOT NULL,
+    cambio_bujias VARCHAR(100) NOT NULL,
+    revision_bandas VARCHAR(100) NOT NULL,
+    cambio_aceite_transmision VARCHAR(100) NOT NULL,
+    cambio_aceite_direccion VARCHAR(100) NOT NULL,
+    cambio_aceite_frenos VARCHAR(100) NOT NULL,
+    revision_ruedas_delanteras VARCHAR(100) NOT NULL,
+    revision_ruedas_traseras VARCHAR(100) NOT NULL,
+    revision_cigueñales VARCHAR(100) NOT NULL,
+    FOREIGN KEY (matricula) REFERENCES coches(matricula)
+)`);
 
     console.log("Insertando datos de prueba...");
 
@@ -126,7 +122,6 @@ const main = async () => {
     ];
 
     for (const user of users) {
-      user.id = uuid();
       user.password = await hashPassword(user.password);
       user.registrationCode = "regCode" + Math.floor(Math.random() * 1000);
       user.recoverPassCode = "recov" + Math.floor(Math.random() * 1000);
@@ -134,9 +129,8 @@ const main = async () => {
 
     const userInsertPromise = users.map((user) =>
       pool.query(
-        `INSERT INTO users (id, nombre, email, password, coche, matricula, role, registrationCode, recoverPassCode, telefono, direccion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO users (nombre, email, password, coche, matricula, role, registrationCode, recoverPassCode, telefono, direccion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
-          user.id,
           user.nombre,
           user.email,
           user.password,

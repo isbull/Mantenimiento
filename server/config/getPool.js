@@ -1,5 +1,6 @@
-import mysql2 from "mysql2";
-import { db_host, db_user, db_password, db_name, port } from "../../env.js";
+import mysql2 from "mysql2/promise";
+
+import { db_host, db_user, db_password, db_name, port } from "../env.js";
 
 const pool = mysql2.createPool({
   host: db_host,
@@ -8,4 +9,6 @@ const pool = mysql2.createPool({
   database: db_name,
   port: port,
 });
-export default pool;
+const getPool = () => pool;
+
+export default getPool;

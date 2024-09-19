@@ -1,4 +1,4 @@
-INSERT INTO usuarios (nombre,email, password, coche, matricula, telefono, direccion) VALUES ('Cachero', 'admin@admin.com', 'admin', 'A6', '1524YLD', '122545892', 'cale administrador');
+INSERT INTO users (nombre,email, password, coche, matricula, telefono, direccion) VALUES ('Cachero', 'admin@admin.com', 'admin', 'A6', '1524YLD', '122545892', 'calle administrador');
 
 INSERT INTO coches (matricula, marca, modelo, plazas, kilometros, itv, itv_fecha,ultimo_mantenimiento) VALUES ('1524YLD', 'Audi', 'A6', '5', '120000', '1', '2023-05-05','2023-05-05');
 
